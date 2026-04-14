@@ -1,0 +1,25 @@
+# docker-compose.yml
+# ---------------------------------------------------------------
+# Spin up a local PostgreSQL instance with one command:
+#   docker compose up -d
+# ---------------------------------------------------------------
+
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: crud_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: crud_db
+    ports:
+      - "5432:5432"       # Expose to host so the app can connect
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # Persist data across restarts
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql  # Auto-run on first start
+
+volumes:
+  postgres_data:
